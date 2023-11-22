@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Randomize Standup</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Helvetica, sans-serif;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+        #wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: top;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            padding-top: 40px;
+        }
+       
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <!-- Wrapper div -->
+        <button id="myButton">Randomize Standup</button>
+        <!-- Button element -->
+        <div id="listContainer"></div>
+        <!-- Separate div for the list -->
+    </div>
+
+    <script>
+        // Array of names
+        const names = ["Rishi Khurana", "Vlad Boiko", "Mikhail Shevchenko", "Vadim Polosatov", "Giorgio Catenacci", "Samay Thakkar", "Egor Voronin", "Danial Safvat", "Eli Shepard", "Andrew Ovcharuk", "Sean Sullivan"];
+
+        // Function to shuffle the array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        document.getElementById('myButton').addEventListener('click', function() {
+            // Shuffle the names array
+            shuffleArray(names);
+
+            // Create an ordered list element
+            const ol = document.createElement('ol');
+
+            // Loop through the shuffled names array and create list items
+            names.forEach(function(name) {
+                const li = document.createElement('li');
+                li.textContent = name;
+                ol.appendChild(li);
+            });
+
+            // Clear any existing list in the list container and append the new list
+            const listContainer = document.getElementById('listContainer');
+            listContainer.innerHTML = '';
+            listContainer.appendChild(ol);
+        });
+    </script>
+</body>
+</html>
