@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
     <title>Sleep Forecast</title>
     <style>
         .error { color: red; }
@@ -23,7 +24,7 @@
             justify-content: top;
             align-items: center;
             height: 100%;
-            width: 100%;
+            width: 80%;
             padding-top: 8px;
         }
        
@@ -47,12 +48,16 @@
         label {
             margin-bottom: 8px;
         }
-       
+        select {
+        -webkit-appearance: none; /* for Safari and Chrome */
+        -moz-appearance: none; /* for Firefox */
+        appearance: none; /* standard property */
+        }   
     </style>
 </head>
 <body>
-    <h1>Welcome to the Sleep Forecast</h1>
-    <p>This form alllows you to calculate 3 sleep per day scadule.</p>
+    <p>Welome to the Sleep Forcast <br>
+    This form alllows you to calculate 3 sleep per day scadule.</p>
     <form id="timeForm">
         <label for="periodSelect">Choose a Period:</label>
         <select id="periodSelect">
