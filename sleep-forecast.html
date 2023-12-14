@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep Forecast</title>
+    <style>
+        .error { color: red; }
+        .selected-period { color: blue; }
+        * {
+            box-sizing: border-box;
+            font-family: Helvetica, sans-serif;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: top;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            padding-top: 8px;
+        }
+       
+        li {
+            margin-bottom: 8px;
+        }
+        form {
+            display:flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 320px;
+            justify-content: center;
+            align-items: start;
+        }
+        input, select, button {
+            width: 100%;
+            margin-bottom: 24px;
+            height: 44px;
+            padding: 0 8px;
+        }
+        label {
+            margin-bottom: 8px;
+        }
+       
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Sleep Forecast</h1>
+    <p>This form alllows you to calculate 3 sleep per day scadule.</p>
+    <form id="timeForm">
+        <label for="periodSelect">Choose a Period:</label>
+        <select id="periodSelect">
+            <option value="morningWake">Morning Wake</option>
+            <option value="sleep1">Sleep 1</option>
+            <option value="wake1">Wake 1</option>
+            <option value="sleep2">Sleep 2</option>
+            <option value="wake2">Wake 2</option>
+            <option value="sleep3">Sleep 3</option>
+            <option value="wake3">Wake 3</option>
+            <option value="nightSleep">Night Sleep</option>
+        </select> 
+
+        <label for="timeInput">Set the Time (hh:mm):</label>
+        <input type="text" id="timeInput" pattern="\d{2}:\d{2}" required>
+
+        <button type="submit">Calculate</button>
+    </form>
+    <div id="error" class="error"></div>
+    <div id="results"></div>
+
+    <script>
+        // JavaScript will go here
+        document.getElementById("timeForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const period = document.getElementById("periodSelect").value;
+    const timeStr = document.getElementById("timeInput").value;
+
+    // Validate time format
+    if (!/^\d{2}:\d{2}$/.test(timeStr)) {
+        document.getElementById("error").textContent = "Please enter time in HH:MM format";
+        return;
+    } else {
+        document.getElementById("error").textContent = "";
+    }
+
+    const timeParts = timeStr.split(":");
+    let date = new Date();
+    date.setHours(timeParts[0], timeParts[1], 0, 0);
+
+    // Array of time variables
+    let schedule = [
+        { name: "morningWake", value: null },
+        { name: "sleep1", value: null },
+        { name: "wake1", value: null },
+        { name: "sleep2", value: null },
+        { name: "wake2", value: null },
+        { name: "sleep3", value: null },
+        { name: "wake3", value: null },
+        { name: "nightSleep", value: null }
+    ];
+
+    // Set the selected time
+    schedule.find(item => item.name === period).value = date;
+
+    // Calculate other times
+    const timeDeltas = {
+        morningWake: 2.5 * 60,
+        sleep1: 1 * 60,
+        wake1: 2.5 * 60,
+        sleep2: 1 * 60,
+        wake2: 2.5 * 60,
+        sleep3: 1 * 60,
+        wake3: 3 * 60,
+        nightSleep: 10.5 * 60
+    };
+
+    // Find start index
+    let startIndex = schedule.findIndex(item => item.name === period);
+    let currentTime = new Date(date.getTime());
+
+    // Calculate forward
+    for (let i = 0; i < schedule.length; i++) {
+        let index = (startIndex + i) % schedule.length;
+        if (i !== 0) {
+            let prevIndex = (startIndex + i - 1) % schedule.length;
+            let delta = timeDeltas[schedule[prevIndex].name] * 60 * 1000;
+            currentTime = new Date(currentTime.getTime() + delta);
+            schedule[index].value = new Date(currentTime.getTime());
+        }
+    }
+
+    // Display results
+let resultHTML = "";
+schedule.forEach(item => {
+    let itemClass = item.name === period ? " class='selected-period'" : "";
+    resultHTML += `<p${itemClass}>${item.name}: ${item.value.toLocaleTimeString()}</p>`;
+});
+
+document.getElementById("results").innerHTML = resultHTML;
+});
+
+
+    </script>
+</body>
+</html>
